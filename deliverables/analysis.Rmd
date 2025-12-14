@@ -1,0 +1,617 @@
+---
+title: "Project"
+author: "Jordan Klein"
+date: "2025-12-02"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+
+# -----------------------------
+# INIT
+# -----------------------------
+
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls())
+
+library(tidyverse)
+library(patchwork)
+library(ggthemes)
+library(GGally)
+library(forecast)
+library(ggalt)
+library(ggridges)
+library(caret)
+library(ranger)
+library(writexl)
+library(ggcorrplot)
+
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+```
+
+## Helper Functions
+
+This functions will be used for preprocessing and analysis.
+
+```{r}
+
+impute_lm <- function(feature, data, condition) {
+  
+  # Impute values in a numeric column using a linear model.
+  # Rows where `condition` is FALSE are used to train the model.
+  # For rows where `condition` is TRUE, the function predicts and replaces the value.
+  # All other rows keep their original values.
+  
+  feature   <- rlang::enquo(feature)
+  condition <- rlang::enquo(condition)
+  
+  # Rows where condition is FALSE
+  train_data <- data %>% 
+    dplyr::filter(!(!!condition))
+  
+  # Fit LM
+  formula <- as.formula(paste0(rlang::as_name(feature), " ~ ."))
+  fit <- lm(formula, data = train_data)
+  
+  # Predict for rows needing imputation
+  pred_data <- data %>% dplyr::filter(!!condition)
+  preds <- predict(fit, newdata = pred_data)
+  
+  # Original column
+  out <- data[[rlang::as_name(feature)]]
+  
+  # Correctly evaluate logical condition within `data`
+  cond_logical <- rlang::eval_tidy(condition, data)
+  
+  # Replace
+  out[cond_logical] <- preds
+  
+  out
+}
+
+get_predictions <- function(
+    formula,
+    train,
+    test,
+    model = c("lm", "rf"),
+    ...
+) {
+  
+  # Train a linear model or random forest on `train` and generate predictions for `test`.
+  # Select model via `model = "lm"` or `"rf"`.
+  # Returns a vector of predictions.
+
+  
+  # match the argument + enforce allowed values
+  model <- match.arg(model)
+  
+  
+  if (model == "lm") {
+    # Linear Model
+    fit <- lm(formula, data = train, ...)
+    preds <- predict(fit, newdata = test)
+
+  } else if (model == "rf") {
+    # Random Forest
+    fit <- ranger::ranger(
+      formula,
+      data = train,
+      num.threads = parallel::detectCores(),
+      ...
+    )
+    preds <- predict(fit, test)$predictions
+  }
+
+  return(preds)
+}
+
+kfold_metrics <- function(
+    formula,
+    data,
+    k = 10,
+    model = c("lm", "rf"),
+    ...
+) {
+  
+  # Perform k-fold cross-validation for a given formula and model type (lm or rf).
+  # Trains on k−1 folds and predicts the held-out fold, repeating for all k folds.
+  # Returns MAE and MAPE along with the model type and formula used.
+  
+  model <- match.arg(model)
+
+  # Create folds
+  folds <- createFolds(1:nrow(data), k = k, list = TRUE)
+
+  preds  <- numeric(nrow(data))
+  actual <- model.response(model.frame(formula, data))
+
+  # Perform CV
+  for (i in seq_along(folds)) {
+    test_idx  <- folds[[i]]
+    train_idx <- setdiff(seq_len(nrow(data)), test_idx)
+
+    train <- data[train_idx, ]
+    test  <- data[test_idx, ]
+
+    # use your helper
+    preds[test_idx] <- get_predictions(
+      formula = formula,
+      train   = train,
+      test    = test,
+      model   = model,
+      ...
+    )
+  }
+
+  # Metrics
+  mae  <- mean(abs(preds - actual))
+  mape <- mean(abs((actual - preds) / actual)) * 100
+
+  data.frame(
+    model   = model,
+    formula = paste(deparse(formula), collapse = ""),
+    mae     = mae,
+    mape    = mape
+  )
+}
+
+
+eval_circuit <- function(
+    formulas,
+    data,
+    k = 10,
+    excel_path = NULL,
+    ...
+) {
+  
+  # -----------------------------------------------------------
+  # Eval Circuit
+  # Runs model evaluation across all provided formulas.
+  #
+  # Given:
+  #   - formulas: a named list of formulas
+  #   - data: dataset
+  #   - k: number of folds for k-fold CV
+  #   - excel_path: optional path to save results as an Excel file
+  #
+  # Process:
+  #   • For each formula:
+  #       – Run k-fold CV using Linear Regression
+  #       – Run k-fold CV using Random Forest
+  #       – Store MAE, MAPE, model type, and the formula name
+  #   • Combine results for all formulas and models
+  #   • Sort final table by MAE (ascending)
+  #   • Optionally export the results to Excel
+  #
+  # Returns:
+  #   A data frame with:
+  #       formula_name, model type, mae, mape, and other metrics
+  # -----------------------------------------------------------
+  
+  results <- Map(function(name, form) {
+    
+    lm_res <- kfold_metrics(
+      formula = form,
+      data    = data,
+      k       = k,
+      model   = "lm",
+      ...
+    )
+    lm_res$formula_name <- name     # <--- save the name
+    
+    rf_res <- kfold_metrics(
+      formula = form,
+      data    = data,
+      k       = k,
+      model   = "rf",
+      ...
+    )
+    rf_res$formula_name <- name     # <--- same
+    
+    rbind(lm_res, rf_res)
+    
+  }, names(formulas), formulas)
+  
+  # Combine all
+  results_df <- do.call(rbind, results)
+  
+  # Order by MAE
+  results_df <- results_df[order(results_df$mae), ]
+  rownames(results_df) <- NULL
+  
+  # Save Excel if needed
+  if (!is.null(excel_path)) {
+    write_xlsx(results_df, excel_path)
+    message("Results written to: ", excel_path)
+  }
+  
+  return(results_df)
+}
+```
+
+## Load and Preprocess
+Impute missing values, engineer features of EDA and modeling
+
+```{r}
+
+
+data <- read.csv("train2.csv")
+
+Features <- list(
+  Target = "Age",
+  Size = c("Length", "Height", "Diameter"),
+  Mass = c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")
+)
+Features$All <- c(Features$Size, Features$Mass)
+
+abalone <- data %>% 
+  mutate(
+    Volume = 4/3 * pi * Length/2 * Height/2 * Diameter/2,
+    IsAdult = factor(if_else(Sex == "I", "Infant", "Adult"), 
+                     ordered = TRUE, levels = c("Infant", "Adult")),
+    Sex = factor(case_when(
+      Sex == "I" ~ "Infant",
+      Sex == "F" ~ "Female",
+      Sex == "M" ~ "Male"
+    )),
+    Height = impute_lm(
+      feature = Height,
+      data = cur_data(),     
+      condition = Height == 0
+    ),
+    Diameter = impute_lm(
+      feature = Diameter,
+      data = cur_data(),     
+      condition = Diameter == 0
+    ),
+    Shucked.Weight = impute_lm(
+      feature = Shucked.Weight,
+      data = cur_data(),
+      condition = Shucked.Weight > Weight
+    ),
+    Weight.Mean1 = (Shucked.Weight*Viscera.Weight*Shell.Weight)**(1/3),
+    Weight.Mean2 = (Weight*Shucked.Weight*Viscera.Weight*Shell.Weight)**(1/4),
+    Weight.Norm1 = sqrt(Shucked.Weight**2 + Viscera.Weight**2 + Shell.Weight**2),
+    Weight.Norm2 = sqrt(Shucked.Weight**2 + Viscera.Weight**2 + Shell.Weight**2 + Weight **2),
+    Size.Norm = sqrt(Length**2 + Diameter**2 + Height**2),
+    Size.Mean = (Length + Diameter + Height)**(1/3),
+    Shell.Ratio = Shell.Weight / Weight,
+    Meat.Ratio = Shucked.Weight / Weight,
+    Viscera.Ratio = Viscera.Weight / Weight,
+    Soft.Ratio = (Shucked.Weight + Viscera.Weight) /Weight,
+    Elongation = Length / Diameter,
+    Flatness = Height / sqrt(Length*Diameter),
+    SurfaceArea = (Length * Diameter + Length * Height + Diameter * Height),
+    Roundness = Diameter / Length,
+    Density = Volume / Weight
+  )
+
+summary(abalone)
+```
+
+## EVALUATE DATA QUALITY
+Some features have missing data.
+Diameter and Height have 0 values.
+Some rows have Shucked Weight which are higher than the total weight.
+
+This values are impossible, and will be replaced using a predictive model that considers all other features.
+
+```{r}
+
+data <- read.csv("train2.csv")
+
+p1<- data %>% 
+  select(Weight, Shucked.Weight) %>% 
+  mutate(
+    Suspect = Shucked.Weight > Weight
+  ) %>% 
+  ggplot(aes(x = Weight, y = Shucked.Weight)) +
+    # Shade area below y = x
+    geom_ribbon(aes(ymin = Weight, ymax = Inf), fill = "red", alpha = 0.1) +
+    # Points
+    geom_point(aes(color = Suspect, size = Suspect)) +
+    scale_color_manual(values = c("FALSE" = "gray60", "TRUE" = "firebrick")) +
+    scale_size_manual(values = c("FALSE" = 1, "TRUE" = 3)) +
+    # Optional: draw y = x line for reference
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+    annotate(
+      "text",
+      x = 0,
+      y = 20,
+      label = "Suspect Zone: Shucked Weight > Total Weight",
+      hjust = -.1,          # left-align text at x = 0
+      vjust = 1,          # anchor at top of plot
+      size = 6,
+      color = "firebrick"
+    ) +
+    scale_y_continuous(limits = c(0,20)) +
+    scale_x_continuous(limits = c(0,20)) +
+    theme_excel_new() +
+    labs(title = "Analysis of Data Quality: Total vs. Shucked Weight",
+         x = "Total Weight (g)",
+         y = "Shucked Weight (g)") +
+    theme(
+      plot.title = element_text(size = 20),
+      axis.title = element_text(size = 16),
+      axis.text = element_text(size = 12),
+      legend.position = "none",
+      plot.background  = element_rect(fill = "aliceblue", color = NA),
+      panel.background = element_rect(fill = "aliceblue", color = NA)
+    )
+
+
+p2 <- data %>% 
+  select(Diameter, Height) %>% 
+  mutate(
+    Suspect = Diameter == 0 | Height == 0
+  ) %>% 
+  ggplot(aes(x = Height, y = Diameter)) +
+
+  # Points
+  geom_point(aes(color = Suspect, size = Suspect)) +
+  scale_color_manual(values = c("FALSE" = "gray60", "TRUE" = "firebrick")) +
+  scale_size_manual(values = c("FALSE" = 1, "TRUE" = 3)) +
+
+  geom_encircle(
+    data = function(df) dplyr::filter(df, Suspect),
+    aes(x = Height, y = Diameter),
+    color = "firebrick",
+    size = 1.2,
+    expand = 0.04,
+    s_shape = 0.8
+  ) +
+
+  # Labels
+  labs(
+    title = "Analysis of Data Quality: Height & Diameter",
+    x = "Height (mm)",
+    y = "Diameter (mm)"
+  ) +
+  annotate(
+    "text",
+    x = 0.01, y = 0.8,
+    label = "Suspect Entries:\nZero Height or Zero Diameter",
+    color = "firebrick",
+    size = 6,
+    hjust = 0
+  ) +
+  theme_excel_new() +
+  theme(
+    legend.position = "none",
+    plot.background  = element_rect(fill = "aliceblue", color = NA),
+    panel.background = element_rect(fill = "aliceblue", color = NA)
+  )
+
+p1/p2
+```
+
+## CHECK FOR CORRELATIONS
+
+This code yields a correlogram for all numeric features.
+
+All features are strongly correlated with one another, and only moderately correlated with Age. This signals difficulties in producing an accurate predictive model.
+
+```{r}
+
+
+abalone.corr <- round(
+  cor(abalone[,c(Features$Size, Features$Mass, Features$Target)]),
+  1
+)
+
+abalone.corr %>% 
+  ggcorrplot(
+    type = "lower",
+    hc.order = TRUE,
+    lab = TRUE,
+    lab_size = 6,
+    method = "circle",
+    colors = c("tomato2", "white", "springgreen3"),
+    title = "Correlogram of Abalone Features",
+    ggtheme = theme_excel_new
+  ) +
+  scale_size(range = c(0, 20)) +   # << enlarge circles
+  theme(
+    legend.position = "none",
+    plot.background  = element_rect(fill = "lightblue1", color = NA),
+    panel.background = element_rect(fill = "lightblue1", color = NA)
+  )
+
+
+  
+```
+
+# CHECK SIZE AND WEIGHT DISTRIBUTION
+
+Looking at size, the lowest value is high, indicating flatness. Diameter and Length are closer, with most abalone being slightly elongated.
+
+Looking at weight, the the highest mass part is the meat, followed by the shell, and then the viscera.
+
+```{r}
+
+
+
+p1 <- abalone %>% 
+  ggplot(aes(x = Volume, y = Age, color = IsAdult)) +
+  geom_point() +
+  labs(
+    title = "Ellipsoid Volume vs. Age",
+    x = expression("Ellipsoid Volume (cm"^3*")"),
+    color = NULL
+  ) +
+  theme_excel_new() +
+  theme(
+    plot.background  = element_rect(fill = "lightblue1", color = NA),
+    panel.background = element_rect(fill = "lightblue1", color = NA)
+  )
+
+p2 <- abalone %>%
+  pivot_longer(
+    cols = c(Height, Diameter, Length),
+    names_to = "Measure",
+    values_to = "Value"
+  ) %>%
+  mutate(
+    Measure = factor(Measure, levels = c("Length", "Diameter", "Height"))
+  ) %>%
+  ggplot(aes(x = Value, y = Measure, fill = IsAdult)) +
+  geom_density_ridges(alpha = 0.8, color = "white") +
+  theme_excel_new() +
+  labs (
+    title = "Distrbution of Abalone Size Metrics",
+    y = "Metric",
+    x = "Size (cm)",
+    color = NULL
+  ) +
+  theme(
+    plot.background  = element_rect(fill = "lightblue1", color = NA),
+    panel.background = element_rect(fill = "lightblue1", color = NA)
+  )
+
+p2 + p1
+
+p1 <- abalone %>% 
+  ggplot(aes(x = Weight, y = Age, color = IsAdult)) +
+  geom_point() +
+  labs(
+    title = "Total Weight vs. Age",
+    x = "Weight (grams)",
+    color = NULL
+  ) +
+  theme_excel_new() +
+  theme(
+    plot.background  = element_rect(fill = "lightblue1", color = NA),
+    panel.background = element_rect(fill = "lightblue1", color = NA)
+  )
+
+p2 <- abalone %>%
+  pivot_longer(
+    cols = c(Shucked.Weight, Shell.Weight, Viscera.Weight),
+    names_to = "Part",
+    values_to = "Value"
+  ) %>%
+  mutate(
+    Part = factor(
+      case_when(
+        Part == "Shucked.Weight" ~ "Meat",
+        Part == "Shell.Weight" ~ "Shell",
+        Part == "Viscera.Weight" ~ "Viscera"
+      ), levels = c("Meat", "Shell", "Viscera"))
+  ) %>%
+  ggplot(aes(x = Value, y = Part, fill = IsAdult)) +
+  geom_density_ridges(alpha = 0.8, color = "white") +
+  theme_excel_new() +
+  labs (
+    title = "Distrbution of Abalone Weight Metrics",
+    x = "Weight (grams)",
+    color = NULL
+  ) +
+  scale_x_continuous(limits = c(0, 30)) +
+  theme(
+    plot.background  = element_rect(fill = "lightblue1", color = NA),
+    panel.background = element_rect(fill = "lightblue1", color = NA)
+  )
+p2 + p1
+```
+
+## ANALYSIS OF RESIDUALS
+
+Use residuals to probe the interaction between different variables and Age.
+
+This pair of plots show that as abalone age past 10 years olds, the relative prorportion of meat weight tends to decrease, and shell tends to increase.
+
+```{r}
+analyze_residuals <- function(formula, data, ... ){
+  
+  fit <- lm(formula, data = data)
+  data <- data %>% 
+    mutate(
+      residual = resid(fit)
+    )
+  
+  # get x-range for shading
+  x_range <- range(data$Age, na.rm = TRUE)
+  y_range <- range(data$residual, na.rm = TRUE)
+
+  ggplot(data, aes(x = Age, y = residual)) +
+    # === background shading ===
+    annotate("rect",
+             xmin = x_range[1], xmax = x_range[2],
+             ymin = 0, ymax = y_range[2],
+             fill = "green", alpha = 0.1) +
+    annotate("rect",
+             xmin = x_range[1], xmax = x_range[2],
+             ymin = y_range[1], ymax = 0,
+             fill = "red", alpha = 0.1) +
+    
+    # points + smooth
+    geom_point(alpha = 0.25) +
+    geom_smooth(method = "loess", se = FALSE, linewidth = 1.2) +
+    
+    labs(...) +
+    theme_excel_new() +
+    theme(
+      plot.background  = element_rect(fill = "lightblue1", color = NA),
+      panel.background = element_rect(fill = "lightblue1", color = NA)
+    )
+}
+
+p1 <- analyze_residuals(
+  Shell.Weight ~ Weight, 
+  abalone,
+  title = "Analysis of Residuals (Shell Weight ~ Total Weight)",
+  x = NULL,
+  y = "Residual"
+  )
+
+p2 <- analyze_residuals(
+  Shucked.Weight ~ Weight, 
+  abalone,
+  title = "Analysis of Residuals (Meat Weight ~ Total Weight)",
+  x = "Age",
+  y = "Residual"
+  )
+
+p1/p2
+```
+## MODEL ZOO
+
+We prepare a series of models using all baseline features and various engineered features. The final results are saved to are displayed.
+```{r}
+str(abalone)
+
+formulas <- list(
+  baseline = Age ~ Sex + Diameter + Length + Height + Weight + Shucked.Weight + Viscera.Weight + Shell.Weight
+)
+
+formulas$Weight.Mean1 <- update(formulas$baseline, . ~ . + Weight.Mean1)
+formulas$Weight.Mean2 <- update(formulas$baseline, . ~ . + Weight.Mean2)
+formulas$Weight.Norm1 <- update(formulas$baseline, . ~ . + Weight.Norm1)
+formulas$Weight.Norm2 <- update(formulas$baseline, . ~ . + Weight.Norm2)
+formulas$Size.Norm <- update(formulas$baseline, . ~ . + Size.Norm)
+formulas$Size.Mean <- update(formulas$baseline, . ~ . + Size.Mean)
+formulas$Volume <- update(formulas$baseline, . ~ . + Volume)
+formulas$Shell.Ratio <- update(formulas$baseline, . ~ . + Shell.Ratio)
+formulas$Meat.Ratio <- update(formulas$baseline, . ~ . + Meat.Ratio)
+formulas$Viscera.Ratio <- update(formulas$baseline, . ~ . + Viscera.Ratio)
+formulas$Soft.Ratio <- update(formulas$baseline, . ~ . + Soft.Ratio)
+formulas$Elongation <- update(formulas$baseline, . ~ . + Elongation)
+formulas$Flatness <- update(formulas$baseline, . ~ . + Flatness)
+formulas$SurfaceArea <- update(formulas$baseline, . ~ . + SurfaceArea)
+formulas$Roundness <- update(formulas$baseline, . ~ . + Roundness)
+formulas$Density <- update(formulas$baseline, . ~ . + Density)
+formulas$Final1 <- update(formulas$baseline, . ~ . + Soft.Ratio + Weight.Norm1 + Size.Norm)
+formulas$Final2 <- update(formulas$baseline, . ~ . + Weight.Norm2 + Volume + SurfaceArea)
+
+
+
+
+
+results <- eval_circuit(formulas, abalone, excel_path = "results.xlsx")
+results %>% select(formula_name, model, mae)
+```

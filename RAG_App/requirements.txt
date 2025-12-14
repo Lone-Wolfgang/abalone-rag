@@ -1,0 +1,5 @@
+gradio
+faiss-cpu
+sentence-transformers
+torch
+pickle-mixin

@@ -1,0 +1,932 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Project},
+  pdfauthor={Jordan Klein},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Project}
+\author{Jordan Klein}
+\date{2025-12-02}
+
+\begin{document}
+\maketitle
+
+\subsection{Helper Functions}\label{helper-functions}
+
+This functions will be used for preprocessing and analysis.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{impute\_lm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(feature, data, condition) \{}
+  
+  \CommentTok{\# Impute values in a numeric column using a linear model.}
+  \CommentTok{\# Rows where \textasciigrave{}condition\textasciigrave{} is FALSE are used to train the model.}
+  \CommentTok{\# For rows where \textasciigrave{}condition\textasciigrave{} is TRUE, the function predicts and replaces the value.}
+  \CommentTok{\# All other rows keep their original values.}
+  
+\NormalTok{  feature   }\OtherTok{\textless{}{-}}\NormalTok{ rlang}\SpecialCharTok{::}\FunctionTok{enquo}\NormalTok{(feature)}
+\NormalTok{  condition }\OtherTok{\textless{}{-}}\NormalTok{ rlang}\SpecialCharTok{::}\FunctionTok{enquo}\NormalTok{(condition)}
+  
+  \CommentTok{\# Rows where condition is FALSE}
+\NormalTok{  train\_data }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%} 
+\NormalTok{    dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\NormalTok{(}\SpecialCharTok{!!}\NormalTok{condition))}
+  
+  \CommentTok{\# Fit LM}
+\NormalTok{  formula }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(rlang}\SpecialCharTok{::}\FunctionTok{as\_name}\NormalTok{(feature), }\StringTok{" \textasciitilde{} ."}\NormalTok{))}
+\NormalTok{  fit }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(formula, }\AttributeTok{data =}\NormalTok{ train\_data)}
+  
+  \CommentTok{\# Predict for rows needing imputation}
+\NormalTok{  pred\_data }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!!}\NormalTok{condition)}
+\NormalTok{  preds }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit, }\AttributeTok{newdata =}\NormalTok{ pred\_data)}
+  
+  \CommentTok{\# Original column}
+\NormalTok{  out }\OtherTok{\textless{}{-}}\NormalTok{ data[[rlang}\SpecialCharTok{::}\FunctionTok{as\_name}\NormalTok{(feature)]]}
+  
+  \CommentTok{\# Correctly evaluate logical condition within \textasciigrave{}data\textasciigrave{}}
+\NormalTok{  cond\_logical }\OtherTok{\textless{}{-}}\NormalTok{ rlang}\SpecialCharTok{::}\FunctionTok{eval\_tidy}\NormalTok{(condition, data)}
+  
+  \CommentTok{\# Replace}
+\NormalTok{  out[cond\_logical] }\OtherTok{\textless{}{-}}\NormalTok{ preds}
+  
+\NormalTok{  out}
+\NormalTok{\}}
+
+\NormalTok{get\_predictions }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(}
+\NormalTok{    formula,}
+\NormalTok{    train,}
+\NormalTok{    test,}
+    \AttributeTok{model =} \FunctionTok{c}\NormalTok{(}\StringTok{"lm"}\NormalTok{, }\StringTok{"rf"}\NormalTok{),}
+\NormalTok{    ...}
+\NormalTok{) \{}
+  
+  \CommentTok{\# Train a linear model or random forest on \textasciigrave{}train\textasciigrave{} and generate predictions for \textasciigrave{}test\textasciigrave{}.}
+  \CommentTok{\# Select model via \textasciigrave{}model = "lm"\textasciigrave{} or \textasciigrave{}"rf"\textasciigrave{}.}
+  \CommentTok{\# Returns a vector of predictions.}
+
+  
+  \CommentTok{\# match the argument + enforce allowed values}
+\NormalTok{  model }\OtherTok{\textless{}{-}} \FunctionTok{match.arg}\NormalTok{(model)}
+  
+  
+  \ControlFlowTok{if}\NormalTok{ (model }\SpecialCharTok{==} \StringTok{"lm"}\NormalTok{) \{}
+    \CommentTok{\# Linear Model}
+\NormalTok{    fit }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(formula, }\AttributeTok{data =}\NormalTok{ train, ...)}
+\NormalTok{    preds }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit, }\AttributeTok{newdata =}\NormalTok{ test)}
+
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (model }\SpecialCharTok{==} \StringTok{"rf"}\NormalTok{) \{}
+    \CommentTok{\# Random Forest}
+\NormalTok{    fit }\OtherTok{\textless{}{-}}\NormalTok{ ranger}\SpecialCharTok{::}\FunctionTok{ranger}\NormalTok{(}
+\NormalTok{      formula,}
+      \AttributeTok{data =}\NormalTok{ train,}
+      \AttributeTok{num.threads =}\NormalTok{ parallel}\SpecialCharTok{::}\FunctionTok{detectCores}\NormalTok{(),}
+\NormalTok{      ...}
+\NormalTok{    )}
+\NormalTok{    preds }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(fit, test)}\SpecialCharTok{$}\NormalTok{predictions}
+\NormalTok{  \}}
+
+  \FunctionTok{return}\NormalTok{(preds)}
+\NormalTok{\}}
+
+\NormalTok{kfold\_metrics }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(}
+\NormalTok{    formula,}
+\NormalTok{    data,}
+    \AttributeTok{k =} \DecValTok{10}\NormalTok{,}
+    \AttributeTok{model =} \FunctionTok{c}\NormalTok{(}\StringTok{"lm"}\NormalTok{, }\StringTok{"rf"}\NormalTok{),}
+\NormalTok{    ...}
+\NormalTok{) \{}
+  
+  \CommentTok{\# Perform k{-}fold cross{-}validation for a given formula and model type (lm or rf).}
+  \CommentTok{\# Trains on k−1 folds and predicts the held{-}out fold, repeating for all k folds.}
+  \CommentTok{\# Returns MAE and MAPE along with the model type and formula used.}
+  
+\NormalTok{  model }\OtherTok{\textless{}{-}} \FunctionTok{match.arg}\NormalTok{(model)}
+
+  \CommentTok{\# Create folds}
+\NormalTok{  folds }\OtherTok{\textless{}{-}} \FunctionTok{createFolds}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(data), }\AttributeTok{k =}\NormalTok{ k, }\AttributeTok{list =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{  preds  }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(data))}
+\NormalTok{  actual }\OtherTok{\textless{}{-}} \FunctionTok{model.response}\NormalTok{(}\FunctionTok{model.frame}\NormalTok{(formula, data))}
+
+  \CommentTok{\# Perform CV}
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(folds)) \{}
+\NormalTok{    test\_idx  }\OtherTok{\textless{}{-}}\NormalTok{ folds[[i]]}
+\NormalTok{    train\_idx }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(}\FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(data)), test\_idx)}
+
+\NormalTok{    train }\OtherTok{\textless{}{-}}\NormalTok{ data[train\_idx, ]}
+\NormalTok{    test  }\OtherTok{\textless{}{-}}\NormalTok{ data[test\_idx, ]}
+
+    \CommentTok{\# use your helper}
+\NormalTok{    preds[test\_idx] }\OtherTok{\textless{}{-}} \FunctionTok{get\_predictions}\NormalTok{(}
+      \AttributeTok{formula =}\NormalTok{ formula,}
+      \AttributeTok{train   =}\NormalTok{ train,}
+      \AttributeTok{test    =}\NormalTok{ test,}
+      \AttributeTok{model   =}\NormalTok{ model,}
+\NormalTok{      ...}
+\NormalTok{    )}
+\NormalTok{  \}}
+
+  \CommentTok{\# Metrics}
+\NormalTok{  mae  }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(}\FunctionTok{abs}\NormalTok{(preds }\SpecialCharTok{{-}}\NormalTok{ actual))}
+\NormalTok{  mape }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(}\FunctionTok{abs}\NormalTok{((actual }\SpecialCharTok{{-}}\NormalTok{ preds) }\SpecialCharTok{/}\NormalTok{ actual)) }\SpecialCharTok{*} \DecValTok{100}
+
+  \FunctionTok{data.frame}\NormalTok{(}
+    \AttributeTok{model   =}\NormalTok{ model,}
+    \AttributeTok{formula =} \FunctionTok{paste}\NormalTok{(}\FunctionTok{deparse}\NormalTok{(formula), }\AttributeTok{collapse =} \StringTok{""}\NormalTok{),}
+    \AttributeTok{mae     =}\NormalTok{ mae,}
+    \AttributeTok{mape    =}\NormalTok{ mape}
+\NormalTok{  )}
+\NormalTok{\}}
+
+
+\NormalTok{eval\_circuit }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(}
+\NormalTok{    formulas,}
+\NormalTok{    data,}
+    \AttributeTok{k =} \DecValTok{10}\NormalTok{,}
+    \AttributeTok{excel\_path =} \ConstantTok{NULL}\NormalTok{,}
+\NormalTok{    ...}
+\NormalTok{) \{}
+  
+  \CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+  \CommentTok{\# Eval Circuit}
+  \CommentTok{\# Runs model evaluation across all provided formulas.}
+  \CommentTok{\#}
+  \CommentTok{\# Given:}
+  \CommentTok{\#   {-} formulas: a named list of formulas}
+  \CommentTok{\#   {-} data: dataset}
+  \CommentTok{\#   {-} k: number of folds for k{-}fold CV}
+  \CommentTok{\#   {-} excel\_path: optional path to save results as an Excel file}
+  \CommentTok{\#}
+  \CommentTok{\# Process:}
+  \CommentTok{\#   • For each formula:}
+  \CommentTok{\#       – Run k{-}fold CV using Linear Regression}
+  \CommentTok{\#       – Run k{-}fold CV using Random Forest}
+  \CommentTok{\#       – Store MAE, MAPE, model type, and the formula name}
+  \CommentTok{\#   • Combine results for all formulas and models}
+  \CommentTok{\#   • Sort final table by MAE (ascending)}
+  \CommentTok{\#   • Optionally export the results to Excel}
+  \CommentTok{\#}
+  \CommentTok{\# Returns:}
+  \CommentTok{\#   A data frame with:}
+  \CommentTok{\#       formula\_name, model type, mae, mape, and other metrics}
+  \CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+  
+\NormalTok{  results }\OtherTok{\textless{}{-}} \FunctionTok{Map}\NormalTok{(}\ControlFlowTok{function}\NormalTok{(name, form) \{}
+    
+\NormalTok{    lm\_res }\OtherTok{\textless{}{-}} \FunctionTok{kfold\_metrics}\NormalTok{(}
+      \AttributeTok{formula =}\NormalTok{ form,}
+      \AttributeTok{data    =}\NormalTok{ data,}
+      \AttributeTok{k       =}\NormalTok{ k,}
+      \AttributeTok{model   =} \StringTok{"lm"}\NormalTok{,}
+\NormalTok{      ...}
+\NormalTok{    )}
+\NormalTok{    lm\_res}\SpecialCharTok{$}\NormalTok{formula\_name }\OtherTok{\textless{}{-}}\NormalTok{ name     }\CommentTok{\# \textless{}{-}{-}{-} save the name}
+    
+\NormalTok{    rf\_res }\OtherTok{\textless{}{-}} \FunctionTok{kfold\_metrics}\NormalTok{(}
+      \AttributeTok{formula =}\NormalTok{ form,}
+      \AttributeTok{data    =}\NormalTok{ data,}
+      \AttributeTok{k       =}\NormalTok{ k,}
+      \AttributeTok{model   =} \StringTok{"rf"}\NormalTok{,}
+\NormalTok{      ...}
+\NormalTok{    )}
+\NormalTok{    rf\_res}\SpecialCharTok{$}\NormalTok{formula\_name }\OtherTok{\textless{}{-}}\NormalTok{ name     }\CommentTok{\# \textless{}{-}{-}{-} same}
+    
+    \FunctionTok{rbind}\NormalTok{(lm\_res, rf\_res)}
+    
+\NormalTok{  \}, }\FunctionTok{names}\NormalTok{(formulas), formulas)}
+  
+  \CommentTok{\# Combine all}
+\NormalTok{  results\_df }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind, results)}
+  
+  \CommentTok{\# Order by MAE}
+\NormalTok{  results\_df }\OtherTok{\textless{}{-}}\NormalTok{ results\_df[}\FunctionTok{order}\NormalTok{(results\_df}\SpecialCharTok{$}\NormalTok{mae), ]}
+  \FunctionTok{rownames}\NormalTok{(results\_df) }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+  
+  \CommentTok{\# Save Excel if needed}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(excel\_path)) \{}
+    \FunctionTok{write\_xlsx}\NormalTok{(results\_df, excel\_path)}
+    \FunctionTok{message}\NormalTok{(}\StringTok{"Results written to: "}\NormalTok{, excel\_path)}
+\NormalTok{  \}}
+  
+  \FunctionTok{return}\NormalTok{(results\_df)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Load and Preprocess}\label{load-and-preprocess}
+
+Impute missing values, engineer features of EDA and modeling
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"train2.csv"}\NormalTok{)}
+
+\NormalTok{Features }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{Target =} \StringTok{"Age"}\NormalTok{,}
+  \AttributeTok{Size =} \FunctionTok{c}\NormalTok{(}\StringTok{"Length"}\NormalTok{, }\StringTok{"Height"}\NormalTok{, }\StringTok{"Diameter"}\NormalTok{),}
+  \AttributeTok{Mass =} \FunctionTok{c}\NormalTok{(}\StringTok{"Weight"}\NormalTok{, }\StringTok{"Shucked.Weight"}\NormalTok{, }\StringTok{"Viscera.Weight"}\NormalTok{, }\StringTok{"Shell.Weight"}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{Features}\SpecialCharTok{$}\NormalTok{All }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(Features}\SpecialCharTok{$}\NormalTok{Size, Features}\SpecialCharTok{$}\NormalTok{Mass)}
+
+\NormalTok{abalone }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Volume =} \DecValTok{4}\SpecialCharTok{/}\DecValTok{3} \SpecialCharTok{*}\NormalTok{ pi }\SpecialCharTok{*}\NormalTok{ Length}\SpecialCharTok{/}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ Height}\SpecialCharTok{/}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ Diameter}\SpecialCharTok{/}\DecValTok{2}\NormalTok{,}
+    \AttributeTok{IsAdult =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{if\_else}\NormalTok{(Sex }\SpecialCharTok{==} \StringTok{"I"}\NormalTok{, }\StringTok{"Infant"}\NormalTok{, }\StringTok{"Adult"}\NormalTok{), }
+                     \AttributeTok{ordered =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Infant"}\NormalTok{, }\StringTok{"Adult"}\NormalTok{)),}
+    \AttributeTok{Sex =} \FunctionTok{factor}\NormalTok{(}\FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      Sex }\SpecialCharTok{==} \StringTok{"I"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Infant"}\NormalTok{,}
+\NormalTok{      Sex }\SpecialCharTok{==} \StringTok{"F"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Female"}\NormalTok{,}
+\NormalTok{      Sex }\SpecialCharTok{==} \StringTok{"M"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Male"}
+\NormalTok{    )),}
+    \AttributeTok{Height =} \FunctionTok{impute\_lm}\NormalTok{(}
+      \AttributeTok{feature =}\NormalTok{ Height,}
+      \AttributeTok{data =} \FunctionTok{cur\_data}\NormalTok{(),     }
+      \AttributeTok{condition =}\NormalTok{ Height }\SpecialCharTok{==} \DecValTok{0}
+\NormalTok{    ),}
+    \AttributeTok{Diameter =} \FunctionTok{impute\_lm}\NormalTok{(}
+      \AttributeTok{feature =}\NormalTok{ Diameter,}
+      \AttributeTok{data =} \FunctionTok{cur\_data}\NormalTok{(),     }
+      \AttributeTok{condition =}\NormalTok{ Diameter }\SpecialCharTok{==} \DecValTok{0}
+\NormalTok{    ),}
+    \AttributeTok{Shucked.Weight =} \FunctionTok{impute\_lm}\NormalTok{(}
+      \AttributeTok{feature =}\NormalTok{ Shucked.Weight,}
+      \AttributeTok{data =} \FunctionTok{cur\_data}\NormalTok{(),}
+      \AttributeTok{condition =}\NormalTok{ Shucked.Weight }\SpecialCharTok{\textgreater{}}\NormalTok{ Weight}
+\NormalTok{    ),}
+    \AttributeTok{Weight.Mean1 =}\NormalTok{ (Shucked.Weight}\SpecialCharTok{*}\NormalTok{Viscera.Weight}\SpecialCharTok{*}\NormalTok{Shell.Weight)}\SpecialCharTok{**}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{Weight.Mean2 =}\NormalTok{ (Weight}\SpecialCharTok{*}\NormalTok{Shucked.Weight}\SpecialCharTok{*}\NormalTok{Viscera.Weight}\SpecialCharTok{*}\NormalTok{Shell.Weight)}\SpecialCharTok{**}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{4}\NormalTok{),}
+    \AttributeTok{Weight.Norm1 =} \FunctionTok{sqrt}\NormalTok{(Shucked.Weight}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Viscera.Weight}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Shell.Weight}\SpecialCharTok{**}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{Weight.Norm2 =} \FunctionTok{sqrt}\NormalTok{(Shucked.Weight}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Viscera.Weight}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Shell.Weight}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Weight }\SpecialCharTok{**}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{Size.Norm =} \FunctionTok{sqrt}\NormalTok{(Length}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Diameter}\SpecialCharTok{**}\DecValTok{2} \SpecialCharTok{+}\NormalTok{ Height}\SpecialCharTok{**}\DecValTok{2}\NormalTok{),}
+    \AttributeTok{Size.Mean =}\NormalTok{ (Length }\SpecialCharTok{+}\NormalTok{ Diameter }\SpecialCharTok{+}\NormalTok{ Height)}\SpecialCharTok{**}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{3}\NormalTok{),}
+    \AttributeTok{Shell.Ratio =}\NormalTok{ Shell.Weight }\SpecialCharTok{/}\NormalTok{ Weight,}
+    \AttributeTok{Meat.Ratio =}\NormalTok{ Shucked.Weight }\SpecialCharTok{/}\NormalTok{ Weight,}
+    \AttributeTok{Viscera.Ratio =}\NormalTok{ Viscera.Weight }\SpecialCharTok{/}\NormalTok{ Weight,}
+    \AttributeTok{Soft.Ratio =}\NormalTok{ (Shucked.Weight }\SpecialCharTok{+}\NormalTok{ Viscera.Weight) }\SpecialCharTok{/}\NormalTok{Weight,}
+    \AttributeTok{Elongation =}\NormalTok{ Length }\SpecialCharTok{/}\NormalTok{ Diameter,}
+    \AttributeTok{Flatness =}\NormalTok{ Height }\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(Length}\SpecialCharTok{*}\NormalTok{Diameter),}
+    \AttributeTok{SurfaceArea =}\NormalTok{ (Length }\SpecialCharTok{*}\NormalTok{ Diameter }\SpecialCharTok{+}\NormalTok{ Length }\SpecialCharTok{*}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Diameter }\SpecialCharTok{*}\NormalTok{ Height),}
+    \AttributeTok{Roundness =}\NormalTok{ Diameter }\SpecialCharTok{/}\NormalTok{ Length,}
+    \AttributeTok{Density =}\NormalTok{ Volume }\SpecialCharTok{/}\NormalTok{ Weight}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: There was 1 warning in `mutate()`.
+## i In argument: `Height = impute_lm(...)`.
+## Caused by warning:
+## ! `cur_data()` was deprecated in dplyr 1.1.0.
+## i Please use `pick()` instead.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(abalone)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        id            Sex          Diameter          Length     
+##  Min.   :    1   Female:4576   Min.   :0.2000   Min.   :0.200  
+##  1st Qu.: 3751   Infant:4967   1st Qu.:0.8875   1st Qu.:1.150  
+##  Median : 7500   Male  :5457   Median :1.0750   Median :1.375  
+##  Mean   : 7500                 Mean   :1.0221   Mean   :1.315  
+##  3rd Qu.:11250                 3rd Qu.:1.2000   3rd Qu.:1.538  
+##  Max.   :15000                 Max.   :1.5750   Max.   :2.038  
+##      Height           Weight        Shucked.Weight    Viscera.Weight    
+##  Min.   :0.0250   Min.   : 0.2268   Min.   : 0.0245   Min.   : 0.01417  
+##  1st Qu.:0.2875   1st Qu.:13.1967   1st Qu.: 5.6557   1st Qu.: 2.80660  
+##  Median :0.3625   Median :23.5584   Median : 9.8585   Median : 4.89029  
+##  Mean   :0.3468   Mean   :23.2434   Mean   :10.0330   Mean   : 5.01447  
+##  3rd Qu.:0.4125   3rd Qu.:32.1625   3rd Qu.:13.9763   3rd Qu.: 6.98815  
+##  Max.   :0.6000   Max.   :75.3246   Max.   :42.1841   Max.   :20.12814  
+##   Shell.Weight           Age             Volume         IsAdult     
+##  Min.   : 0.09922   Min.   : 1.000   Min.   :0.0000   Infant: 4967  
+##  1st Qu.: 3.82718   1st Qu.: 8.000   1st Qu.:0.1548   Adult :10033  
+##  Median : 6.80388   Median :10.000   Median :0.2829                 
+##  Mean   : 6.67329   Mean   : 9.985   Mean   :0.2813                 
+##  3rd Qu.: 9.07184   3rd Qu.:11.000   3rd Qu.:0.3953                 
+##  Max.   :29.10076   Max.   :29.000   Max.   :0.8821                 
+##   Weight.Mean1       Weight.Mean2       Weight.Norm1      Weight.Norm2    
+##  Min.   : 0.06579   Min.   : 0.09683   Min.   : 0.1671   Min.   : 0.3414  
+##  1st Qu.: 3.96474   1st Qu.: 5.35190   1st Qu.: 7.5146   1st Qu.:15.2543  
+##  Median : 6.97497   Median : 9.47937   Median :13.1642   Median :27.0724  
+##  Mean   : 6.91257   Mean   : 9.35784   Mean   :13.1161   Mean   :26.6984  
+##  3rd Qu.: 9.61440   3rd Qu.:13.01581   3rd Qu.:18.2722   3rd Qu.:37.0408  
+##  Max.   :22.89460   Max.   :30.53401   Max.   :48.2741   Max.   :89.4661  
+##    Size.Norm        Size.Mean       Shell.Ratio       Meat.Ratio     
+##  Min.   :0.3562   Min.   :0.8298   Min.   :0.1383   Min.   :0.08231  
+##  1st Qu.:1.4808   1st Qu.:1.3248   1st Qu.:0.2679   1st Qu.:0.39884  
+##  Median :1.7897   Median :1.4136   Median :0.2887   Median :0.43269  
+##  Mean   :1.7014   Mean   :1.3800   Mean   :0.2924   Mean   :0.43054  
+##  3rd Qu.:1.9899   3rd Qu.:1.4659   3rd Qu.:0.3137   3rd Qu.:0.46344  
+##  Max.   :2.6282   Max.   :1.6054   Max.   :1.0000   Max.   :0.82876  
+##  Viscera.Ratio       Soft.Ratio       Elongation        Flatness     
+##  Min.   :0.01587   Min.   :0.1746   Min.   :0.6667   Min.   :0.0603  
+##  1st Qu.:0.19867   1st Qu.:0.6116   1st Qu.:1.2632   1st Qu.:0.2790  
+##  Median :0.21463   Median :0.6494   Median :1.2885   Median :0.2964  
+##  Mean   :0.21600   Mean   :0.6465   Mean   :1.2925   Mean   :0.2975  
+##  3rd Qu.:0.23270   3rd Qu.:0.6841   3rd Qu.:1.3165   3rd Qu.:0.3146  
+##  Max.   :0.76190   Max.   :1.2381   Max.   :2.2500   Max.   :0.5653  
+##   SurfaceArea        Roundness         Density       
+##  Min.   :0.09977   Min.   :0.4444   Min.   :0.00000  
+##  1st Qu.:1.60988   1st Qu.:0.7596   1st Qu.:0.01110  
+##  Median :2.38016   Median :0.7761   Median :0.01196  
+##  Mean   :2.26747   Mean   :0.7748   Mean   :0.01196  
+##  3rd Qu.:2.96352   3rd Qu.:0.7917   3rd Qu.:0.01284  
+##  Max.   :5.10562   Max.   :1.5000   Max.   :0.02557
+\end{verbatim}
+
+\subsection{EVALUATE DATA QUALITY}\label{evaluate-data-quality}
+
+Some features have missing data. Diameter and Height have 0 values. Some
+rows have Shucked Weight which are higher than the total weight.
+
+This values are impossible, and will be replaced using a predictive
+model that considers all other features.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"train2.csv"}\NormalTok{)}
+
+\NormalTok{p1}\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(Weight, Shucked.Weight) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Suspect =}\NormalTok{ Shucked.Weight }\SpecialCharTok{\textgreater{}}\NormalTok{ Weight}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Weight, }\AttributeTok{y =}\NormalTok{ Shucked.Weight)) }\SpecialCharTok{+}
+    \CommentTok{\# Shade area below y = x}
+    \FunctionTok{geom\_ribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{ymin =}\NormalTok{ Weight, }\AttributeTok{ymax =} \ConstantTok{Inf}\NormalTok{), }\AttributeTok{fill =} \StringTok{"red"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+    \CommentTok{\# Points}
+    \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ Suspect, }\AttributeTok{size =}\NormalTok{ Suspect)) }\SpecialCharTok{+}
+    \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"FALSE"} \OtherTok{=} \StringTok{"gray60"}\NormalTok{, }\StringTok{"TRUE"} \OtherTok{=} \StringTok{"firebrick"}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{scale\_size\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"FALSE"} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"TRUE"} \OtherTok{=} \DecValTok{3}\NormalTok{)) }\SpecialCharTok{+}
+    \CommentTok{\# Optional: draw y = x line for reference}
+    \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{slope =} \DecValTok{1}\NormalTok{, }\AttributeTok{intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{annotate}\NormalTok{(}
+      \StringTok{"text"}\NormalTok{,}
+      \AttributeTok{x =} \DecValTok{0}\NormalTok{,}
+      \AttributeTok{y =} \DecValTok{20}\NormalTok{,}
+      \AttributeTok{label =} \StringTok{"Suspect Zone: Shucked Weight \textgreater{} Total Weight"}\NormalTok{,}
+      \AttributeTok{hjust =} \SpecialCharTok{{-}}\NormalTok{.}\DecValTok{1}\NormalTok{,          }\CommentTok{\# left{-}align text at x = 0}
+      \AttributeTok{vjust =} \DecValTok{1}\NormalTok{,          }\CommentTok{\# anchor at top of plot}
+      \AttributeTok{size =} \DecValTok{6}\NormalTok{,}
+      \AttributeTok{color =} \StringTok{"firebrick"}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}
+    \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Analysis of Data Quality: Total vs. Shucked Weight"}\NormalTok{,}
+         \AttributeTok{x =} \StringTok{"Total Weight (g)"}\NormalTok{,}
+         \AttributeTok{y =} \StringTok{"Shucked Weight (g)"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{20}\NormalTok{),}
+      \AttributeTok{axis.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{16}\NormalTok{),}
+      \AttributeTok{axis.text =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{size =} \DecValTok{12}\NormalTok{),}
+      \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+      \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"aliceblue"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+      \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"aliceblue"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{    )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+## i Please use the `linewidth` argument instead.
+## i The deprecated feature was likely used in the ggthemes package.
+##   Please report the issue at <https://github.com/jrnold/ggthemes/issues>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p2 }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(Diameter, Height) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Suspect =}\NormalTok{ Diameter }\SpecialCharTok{==} \DecValTok{0} \SpecialCharTok{|}\NormalTok{ Height }\SpecialCharTok{==} \DecValTok{0}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Height, }\AttributeTok{y =}\NormalTok{ Diameter)) }\SpecialCharTok{+}
+
+  \CommentTok{\# Points}
+  \FunctionTok{geom\_point}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ Suspect, }\AttributeTok{size =}\NormalTok{ Suspect)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"FALSE"} \OtherTok{=} \StringTok{"gray60"}\NormalTok{, }\StringTok{"TRUE"} \OtherTok{=} \StringTok{"firebrick"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_size\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"FALSE"} \OtherTok{=} \DecValTok{1}\NormalTok{, }\StringTok{"TRUE"} \OtherTok{=} \DecValTok{3}\NormalTok{)) }\SpecialCharTok{+}
+
+  \FunctionTok{geom\_encircle}\NormalTok{(}
+    \AttributeTok{data =} \ControlFlowTok{function}\NormalTok{(df) dplyr}\SpecialCharTok{::}\FunctionTok{filter}\NormalTok{(df, Suspect),}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Height, }\AttributeTok{y =}\NormalTok{ Diameter),}
+    \AttributeTok{color =} \StringTok{"firebrick"}\NormalTok{,}
+    \AttributeTok{size =} \FloatTok{1.2}\NormalTok{,}
+    \AttributeTok{expand =} \FloatTok{0.04}\NormalTok{,}
+    \AttributeTok{s\_shape =} \FloatTok{0.8}
+\NormalTok{  ) }\SpecialCharTok{+}
+
+  \CommentTok{\# Labels}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Analysis of Data Quality: Height \& Diameter"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Height (mm)"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Diameter (mm)"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{annotate}\NormalTok{(}
+    \StringTok{"text"}\NormalTok{,}
+    \AttributeTok{x =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{y =} \FloatTok{0.8}\NormalTok{,}
+    \AttributeTok{label =} \StringTok{"Suspect Entries:}\SpecialCharTok{\textbackslash{}n}\StringTok{Zero Height or Zero Diameter"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"firebrick"}\NormalTok{,}
+    \AttributeTok{size =} \DecValTok{6}\NormalTok{,}
+    \AttributeTok{hjust =} \DecValTok{0}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+    \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"aliceblue"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"aliceblue"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{p1}\SpecialCharTok{/}\NormalTok{p2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 8718 rows containing missing values or values outside the scale range
+## (`geom_ribbon()`).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 8718 rows containing missing values or values outside the scale range
+## (`geom_point()`).
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{analysis_files/figure-latex/unnamed-chunk-3-1.pdf}}
+
+\subsection{CHECK FOR CORRELATIONS}\label{check-for-correlations}
+
+This code yields a correlogram for all numeric features.
+
+All features are strongly correlated with one another, and only
+moderately correlated with Age. This signals difficulties in producing
+an accurate predictive model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{abalone.corr }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(}
+  \FunctionTok{cor}\NormalTok{(abalone[,}\FunctionTok{c}\NormalTok{(Features}\SpecialCharTok{$}\NormalTok{Size, Features}\SpecialCharTok{$}\NormalTok{Mass, Features}\SpecialCharTok{$}\NormalTok{Target)]),}
+  \DecValTok{1}
+\NormalTok{)}
+
+\NormalTok{abalone.corr }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggcorrplot}\NormalTok{(}
+    \AttributeTok{type =} \StringTok{"lower"}\NormalTok{,}
+    \AttributeTok{hc.order =} \ConstantTok{TRUE}\NormalTok{,}
+    \AttributeTok{lab =} \ConstantTok{TRUE}\NormalTok{,}
+    \AttributeTok{lab\_size =} \DecValTok{6}\NormalTok{,}
+    \AttributeTok{method =} \StringTok{"circle"}\NormalTok{,}
+    \AttributeTok{colors =} \FunctionTok{c}\NormalTok{(}\StringTok{"tomato2"}\NormalTok{, }\StringTok{"white"}\NormalTok{, }\StringTok{"springgreen3"}\NormalTok{),}
+    \AttributeTok{title =} \StringTok{"Correlogram of Abalone Features"}\NormalTok{,}
+    \AttributeTok{ggtheme =}\NormalTok{ theme\_excel\_new}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_size}\NormalTok{(}\AttributeTok{range =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{20}\NormalTok{)) }\SpecialCharTok{+}   \CommentTok{\# \textless{}\textless{} enlarge circles}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{,}
+    \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+## i Please use tidy evaluation idioms with `aes()`.
+## i See also `vignette("ggplot2-in-packages")` for more information.
+## i The deprecated feature was likely used in the ggcorrplot package.
+##   Please report the issue at <https://github.com/kassambara/ggcorrplot/issues>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+\end{verbatim}
+
+\begin{verbatim}
+## Scale for size is already present.
+## Adding another scale for size, which will replace the existing scale.
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{analysis_files/figure-latex/unnamed-chunk-4-1.pdf}}
+
+\section{CHECK SIZE AND WEIGHT
+DISTRIBUTION}\label{check-size-and-weight-distribution}
+
+Looking at size, the lowest value is high, indicating flatness. Diameter
+and Length are closer, with most abalone being slightly elongated.
+
+Looking at weight, the the highest mass part is the meat, followed by
+the shell, and then the viscera.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p1 }\OtherTok{\textless{}{-}}\NormalTok{ abalone }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Volume, }\AttributeTok{y =}\NormalTok{ Age, }\AttributeTok{color =}\NormalTok{ IsAdult)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Ellipsoid Volume vs. Age"}\NormalTok{,}
+    \AttributeTok{x =} \FunctionTok{expression}\NormalTok{(}\StringTok{"Ellipsoid Volume (cm"}\SpecialCharTok{\^{}}\DecValTok{3}\SpecialCharTok{*}\StringTok{")"}\NormalTok{),}
+    \AttributeTok{color =} \ConstantTok{NULL}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{p2 }\OtherTok{\textless{}{-}}\NormalTok{ abalone }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}
+    \AttributeTok{cols =} \FunctionTok{c}\NormalTok{(Height, Diameter, Length),}
+    \AttributeTok{names\_to =} \StringTok{"Measure"}\NormalTok{,}
+    \AttributeTok{values\_to =} \StringTok{"Value"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Measure =} \FunctionTok{factor}\NormalTok{(Measure, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Length"}\NormalTok{, }\StringTok{"Diameter"}\NormalTok{, }\StringTok{"Height"}\NormalTok{))}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{y =}\NormalTok{ Measure, }\AttributeTok{fill =}\NormalTok{ IsAdult)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density\_ridges}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.8}\NormalTok{, }\AttributeTok{color =} \StringTok{"white"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{ (}
+    \AttributeTok{title =} \StringTok{"Distrbution of Abalone Size Metrics"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Metric"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Size (cm)"}\NormalTok{,}
+    \AttributeTok{color =} \ConstantTok{NULL}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{p2 }\SpecialCharTok{+}\NormalTok{ p1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Picking joint bandwidth of 0.0232
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{analysis_files/figure-latex/unnamed-chunk-5-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p1 }\OtherTok{\textless{}{-}}\NormalTok{ abalone }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Weight, }\AttributeTok{y =}\NormalTok{ Age, }\AttributeTok{color =}\NormalTok{ IsAdult)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Total Weight vs. Age"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Weight (grams)"}\NormalTok{,}
+    \AttributeTok{color =} \ConstantTok{NULL}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{p2 }\OtherTok{\textless{}{-}}\NormalTok{ abalone }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_longer}\NormalTok{(}
+    \AttributeTok{cols =} \FunctionTok{c}\NormalTok{(Shucked.Weight, Shell.Weight, Viscera.Weight),}
+    \AttributeTok{names\_to =} \StringTok{"Part"}\NormalTok{,}
+    \AttributeTok{values\_to =} \StringTok{"Value"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Part =} \FunctionTok{factor}\NormalTok{(}
+      \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{        Part }\SpecialCharTok{==} \StringTok{"Shucked.Weight"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Meat"}\NormalTok{,}
+\NormalTok{        Part }\SpecialCharTok{==} \StringTok{"Shell.Weight"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Shell"}\NormalTok{,}
+\NormalTok{        Part }\SpecialCharTok{==} \StringTok{"Viscera.Weight"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Viscera"}
+\NormalTok{      ), }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Meat"}\NormalTok{, }\StringTok{"Shell"}\NormalTok{, }\StringTok{"Viscera"}\NormalTok{))}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Value, }\AttributeTok{y =}\NormalTok{ Part, }\AttributeTok{fill =}\NormalTok{ IsAdult)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density\_ridges}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.8}\NormalTok{, }\AttributeTok{color =} \StringTok{"white"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{ (}
+    \AttributeTok{title =} \StringTok{"Distrbution of Abalone Weight Metrics"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Weight (grams)"}\NormalTok{,}
+    \AttributeTok{color =} \ConstantTok{NULL}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\AttributeTok{limits =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{30}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}
+    \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+    \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{  )}
+\NormalTok{p2 }\SpecialCharTok{+}\NormalTok{ p1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Picking joint bandwidth of 0.416
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 36 rows containing non-finite outside the scale range
+## (`stat_density_ridges()`).
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{analysis_files/figure-latex/unnamed-chunk-5-2.pdf}}
+
+\subsection{ANALYSIS OF RESIDUALS}\label{analysis-of-residuals}
+
+Use residuals to probe the interaction between different variables and
+Age.
+
+This pair of plots show that as abalone age past 10 years olds, the
+relative prorportion of meat weight tends to decrease, and shell tends
+to increase.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{analyze\_residuals }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(formula, data, ... )\{}
+  
+\NormalTok{  fit }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(formula, }\AttributeTok{data =}\NormalTok{ data)}
+\NormalTok{  data }\OtherTok{\textless{}{-}}\NormalTok{ data }\SpecialCharTok{\%\textgreater{}\%} 
+    \FunctionTok{mutate}\NormalTok{(}
+      \AttributeTok{residual =} \FunctionTok{resid}\NormalTok{(fit)}
+\NormalTok{    )}
+  
+  \CommentTok{\# get x{-}range for shading}
+\NormalTok{  x\_range }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{Age, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  y\_range }\OtherTok{\textless{}{-}} \FunctionTok{range}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{residual, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+
+  \FunctionTok{ggplot}\NormalTok{(data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Age, }\AttributeTok{y =}\NormalTok{ residual)) }\SpecialCharTok{+}
+    \CommentTok{\# === background shading ===}
+    \FunctionTok{annotate}\NormalTok{(}\StringTok{"rect"}\NormalTok{,}
+             \AttributeTok{xmin =}\NormalTok{ x\_range[}\DecValTok{1}\NormalTok{], }\AttributeTok{xmax =}\NormalTok{ x\_range[}\DecValTok{2}\NormalTok{],}
+             \AttributeTok{ymin =} \DecValTok{0}\NormalTok{, }\AttributeTok{ymax =}\NormalTok{ y\_range[}\DecValTok{2}\NormalTok{],}
+             \AttributeTok{fill =} \StringTok{"green"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{annotate}\NormalTok{(}\StringTok{"rect"}\NormalTok{,}
+             \AttributeTok{xmin =}\NormalTok{ x\_range[}\DecValTok{1}\NormalTok{], }\AttributeTok{xmax =}\NormalTok{ x\_range[}\DecValTok{2}\NormalTok{],}
+             \AttributeTok{ymin =}\NormalTok{ y\_range[}\DecValTok{1}\NormalTok{], }\AttributeTok{ymax =} \DecValTok{0}\NormalTok{,}
+             \AttributeTok{fill =} \StringTok{"red"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+    
+    \CommentTok{\# points + smooth}
+    \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.25}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_smooth}\NormalTok{(}\AttributeTok{method =} \StringTok{"loess"}\NormalTok{, }\AttributeTok{se =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{linewidth =} \FloatTok{1.2}\NormalTok{) }\SpecialCharTok{+}
+    
+    \FunctionTok{labs}\NormalTok{(...) }\SpecialCharTok{+}
+    \FunctionTok{theme\_excel\_new}\NormalTok{() }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}
+      \AttributeTok{plot.background  =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{),}
+      \AttributeTok{panel.background =} \FunctionTok{element\_rect}\NormalTok{(}\AttributeTok{fill =} \StringTok{"lightblue1"}\NormalTok{, }\AttributeTok{color =} \ConstantTok{NA}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{\}}
+
+\NormalTok{p1 }\OtherTok{\textless{}{-}} \FunctionTok{analyze\_residuals}\NormalTok{(}
+\NormalTok{  Shell.Weight }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Weight, }
+\NormalTok{  abalone,}
+  \AttributeTok{title =} \StringTok{"Analysis of Residuals (Shell Weight \textasciitilde{} Total Weight)"}\NormalTok{,}
+  \AttributeTok{x =} \ConstantTok{NULL}\NormalTok{,}
+  \AttributeTok{y =} \StringTok{"Residual"}
+\NormalTok{  )}
+
+\NormalTok{p2 }\OtherTok{\textless{}{-}} \FunctionTok{analyze\_residuals}\NormalTok{(}
+\NormalTok{  Shucked.Weight }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Weight, }
+\NormalTok{  abalone,}
+  \AttributeTok{title =} \StringTok{"Analysis of Residuals (Meat Weight \textasciitilde{} Total Weight)"}\NormalTok{,}
+  \AttributeTok{x =} \StringTok{"Age"}\NormalTok{,}
+  \AttributeTok{y =} \StringTok{"Residual"}
+\NormalTok{  )}
+
+\NormalTok{p1}\SpecialCharTok{/}\NormalTok{p2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using formula = 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{analysis_files/figure-latex/unnamed-chunk-6-1.pdf}}
+\#\# MODEL ZOO
+
+We prepare a series of models using all baseline features and various
+engineered features. The final results are saved to are displayed.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(abalone)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    15000 obs. of  27 variables:
+##  $ id            : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ Sex           : Factor w/ 3 levels "Female","Infant",..: 3 3 1 3 2 3 3 2 2 1 ...
+##  $ Diameter      : num  1.025 0.975 1.375 1.062 0.887 ...
+##  $ Length        : num  1.31 1.23 1.74 1.38 1.16 ...
+##  $ Height        : num  0.312 0.338 0.5 0.338 0.3 ...
+##  $ Weight        : num  21 18.7 54.1 22.7 14 ...
+##  $ Shucked.Weight: num  9.89 9.61 19.45 10.9 6.1 ...
+##  $ Viscera.Weight: num  4.41 3.77 14.93 5.56 2.61 ...
+##  $ Shell.Weight  : num  5.06 4.69 14.22 6.42 3.97 ...
+##  $ Age           : int  8 8 11 9 8 14 11 6 5 20 ...
+##  $ Volume        : num  0.22 0.211 0.625 0.258 0.162 ...
+##  $ IsAdult       : Ord.factor w/ 2 levels "Infant"<"Adult": 2 2 2 2 1 2 2 1 1 2 ...
+##  $ Weight.Mean1  : num  6.04 5.54 16.04 7.3 3.98 ...
+##  $ Weight.Mean2  : num  8.25 7.51 21.73 9.69 5.46 ...
+##  $ Weight.Norm1  : num  11.96 11.34 28.34 13.82 7.73 ...
+##  $ Weight.Norm2  : num  24.1 21.9 61 26.5 16 ...
+##  $ Size.Norm     : num  1.69 1.6 2.27 1.77 1.49 ...
+##  $ Size.Mean     : num  1.38 1.36 1.53 1.41 1.33 ...
+##  $ Shell.Ratio   : num  0.241 0.251 0.263 0.283 0.283 ...
+##  $ Meat.Ratio    : num  0.472 0.514 0.36 0.481 0.434 ...
+##  $ Viscera.Ratio : num  0.21 0.202 0.276 0.245 0.186 ...
+##  $ Soft.Ratio    : num  0.682 0.715 0.636 0.726 0.62 ...
+##  $ Elongation    : num  1.28 1.26 1.26 1.29 1.31 ...
+##  $ Flatness      : num  0.269 0.309 0.323 0.279 0.295 ...
+##  $ SurfaceArea   : num  2.08 1.94 3.95 2.28 1.65 ...
+##  $ Roundness     : num  0.781 0.796 0.791 0.773 0.763 ...
+##  $ Density       : num  0.0105 0.0113 0.0116 0.0114 0.0115 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{formulas }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{baseline =}\NormalTok{ Age }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Sex }\SpecialCharTok{+}\NormalTok{ Diameter }\SpecialCharTok{+}\NormalTok{ Length }\SpecialCharTok{+}\NormalTok{ Height }\SpecialCharTok{+}\NormalTok{ Weight }\SpecialCharTok{+}\NormalTok{ Shucked.Weight }\SpecialCharTok{+}\NormalTok{ Viscera.Weight }\SpecialCharTok{+}\NormalTok{ Shell.Weight}
+\NormalTok{)}
+
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Weight.Mean1 }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Weight.Mean1)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Weight.Mean2 }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Weight.Mean2)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Weight.Norm1 }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Weight.Norm1)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Weight.Norm2 }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Weight.Norm2)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Size.Norm }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Size.Norm)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Size.Mean }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Size.Mean)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Volume }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Volume)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Shell.Ratio }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Shell.Ratio)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Meat.Ratio }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Meat.Ratio)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Viscera.Ratio }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Viscera.Ratio)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Soft.Ratio }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Soft.Ratio)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Elongation }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Elongation)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Flatness }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Flatness)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{SurfaceArea }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ SurfaceArea)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Roundness }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Roundness)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Density }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Density)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Final1 }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Soft.Ratio }\SpecialCharTok{+}\NormalTok{ Weight.Norm1 }\SpecialCharTok{+}\NormalTok{ Size.Norm)}
+\NormalTok{formulas}\SpecialCharTok{$}\NormalTok{Final2 }\OtherTok{\textless{}{-}} \FunctionTok{update}\NormalTok{(formulas}\SpecialCharTok{$}\NormalTok{baseline, . }\SpecialCharTok{\textasciitilde{}}\NormalTok{ . }\SpecialCharTok{+}\NormalTok{ Weight.Norm2 }\SpecialCharTok{+}\NormalTok{ Volume }\SpecialCharTok{+}\NormalTok{ SurfaceArea)}
+
+
+
+
+
+\NormalTok{results }\OtherTok{\textless{}{-}} \FunctionTok{eval\_circuit}\NormalTok{(formulas, abalone, }\AttributeTok{excel\_path =} \StringTok{"results.xlsx"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Results written to: results.xlsx
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{results }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(formula\_name, model, mae)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     formula_name model      mae
+## 1     Soft.Ratio    rf 1.390097
+## 2         Final1    rf 1.390603
+## 3     Meat.Ratio    rf 1.392665
+## 4         Final2    lm 1.398625
+## 5   Weight.Norm1    rf 1.399555
+## 6    SurfaceArea    rf 1.400481
+## 7   Weight.Norm2    rf 1.400664
+## 8   Weight.Mean2    rf 1.401058
+## 9  Viscera.Ratio    rf 1.401252
+## 10      baseline    rf 1.401269
+## 11       Density    rf 1.401317
+## 12  Weight.Mean1    rf 1.402927
+## 13     Size.Norm    rf 1.403773
+## 14     Roundness    rf 1.403797
+## 15     Size.Mean    rf 1.404813
+## 16    Elongation    rf 1.404827
+## 17        Final2    rf 1.405204
+## 18        Volume    rf 1.405876
+## 19  Weight.Norm2    lm 1.406581
+## 20   Shell.Ratio    rf 1.408182
+## 21      Flatness    rf 1.411177
+## 22  Weight.Mean2    lm 1.412309
+## 23  Weight.Norm1    lm 1.412734
+## 24  Weight.Mean1    lm 1.413063
+## 25        Final1    lm 1.415150
+## 26        Volume    lm 1.426033
+## 27   SurfaceArea    lm 1.427676
+## 28       Density    lm 1.432760
+## 29     Size.Mean    lm 1.432896
+## 30    Elongation    lm 1.438616
+## 31 Viscera.Ratio    lm 1.439261
+## 32     Size.Norm    lm 1.439330
+## 33     Roundness    lm 1.439572
+## 34      baseline    lm 1.439696
+## 35   Shell.Ratio    lm 1.440434
+## 36      Flatness    lm 1.440933
+## 37    Soft.Ratio    lm 1.442148
+## 38    Meat.Ratio    lm 1.442674
+\end{verbatim}
+
+\end{document}

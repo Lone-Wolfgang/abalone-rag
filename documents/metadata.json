@@ -1,0 +1,29 @@
+{
+    "fisheriesnoaa": {
+        "url": "https://www.fisheries.noaa.gov/species/white-abalone"
+    },
+    "marinebio": {
+        "url": "https://www.marinebio.net/marinescience/06future/abintro.htm"
+    },
+    "sushiuniversity": {
+        "url": "https://sushiuniversity.jp/visual-dictionary/?Name=Japanese-abalone-(kuro-awabi)"
+    },
+    "tokyofoundation": {
+        "url": "https://www.tokyofoundation.org/research/detail.php?id=250"
+    },
+    "visitcalifornia": {
+        "url": "https://www.visitcalifornia.com/experience/cultural-significance-abalone/"
+    },
+    "wikipedia": {
+        "url": "https://en.wikipedia.org/wiki/Abalone"
+    },
+    "xerces": {
+        "url": "https://www.xerces.org/endangered-species/species-profiles/at-risk-aquatic-invertebrates/white-abalone"
+    },
+    "Jenkins2000": {
+        "url": "https://www.frdc.com.au/sites/default/files/products/1998-342%20Aquaculture%20Research%20Vol%2031%20No.1%202000.pdf"
+    },
+    "leighton2008": {
+        "url": "https://bim.ie/wp-content/uploads/2021/02/bimno_25_Abalone_Hatchery_Manual_2008.pdf"
+    }
+}
