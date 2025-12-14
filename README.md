@@ -45,7 +45,9 @@ Harvey and I present our findings.
 ![Distribution of Weight](plots/distribution_of_weight.png)
 ![Analysis of Residuals](plots/analysis_of_residuals.png)
 
-An exploratory data analysis was conducted in using R. You can see the full outcomes [here]
+An exploratory data analysis was conducted in using R. You can see the full outcomes [here](https://github.com/Lone-Wolfgang/abalone-rag/blob/main/deliverables/analysis.pdf).
+
+EDA led to the development of a linear model the predicts age. The best performing model used Lasso Regularization.
 
 **Model Performance**
 
