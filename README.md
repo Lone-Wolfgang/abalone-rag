@@ -10,7 +10,7 @@ The UCI Abalone Dataset was used to develop a set of deliverables that demonstra
 <iframe
   src="https://LoneWolfgang-Abalone-RAG-Demo.hf.space"
   width="100%"
-  height="900"
+  height="700"
   style="border:none;"
 ></iframe>
 
@@ -43,7 +43,7 @@ Harvey and I present our findings.
 ## EDA and Model Development
 
 ![Distribution of Weight](plots/distribution_of_weight.png)
-1[Analysis of Residuals](plots/analysis_of_residuals.png)
+![Analysis of Residuals](plots/analysis_of_residuals.png)
 
 An exploratory data analysis was conducted in using R. You can see the full outcomes [here]
 
