@@ -7,7 +7,7 @@
 The UCI Abalone Dataset was used to develop a set of deliverables that demonstrate a range of data science skills. These include an exploratory data analysis, an R Shiny application that allows users to explore the relationship between age and other features, and an abalone-focused retrieval-augmented generation (RAG) application.
 
 ## RAG
-<iframe src="https://huggingface.co/spaces/LoneWolfgang/Abalone-RAG-Demo"></iframe>  
+<iframe src="https://LoneWolfgang-Abalone-RAG-Demo.hf.space"></iframe>  
 - [R Shiny Application](https://example.com)
 - [RAG Application](https://example.com)
 - [Presentation](https://example.com)
