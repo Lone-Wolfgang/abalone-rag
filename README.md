@@ -22,4 +22,4 @@ To estimate abalone age using features that are easier to measure, several linea
 | RMSE   | **2.02** |
 | R²     | **0.62** |
 
-The RAG application uses methodology that is cutting edge in 2025. This repository includes a notebook that documents how the application was developed. We hope it will be useful for anyone that wants to learn more about RAG.
+The RAG application uses methodology that is cutting edge in 2025. This repository includes a [notebook](https://github.com/Lone-Wolfgang/abalone-rag/blob/main/build_abalone_RAG_app.ipynb) that documents how the application was developed. We hope it will be useful for anyone that wants to learn more about RAG.
