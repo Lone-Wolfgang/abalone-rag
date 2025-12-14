@@ -3,8 +3,8 @@ title: "Project"
 author: "Jordan Klein"
 date: "2025-12-02"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -119,7 +119,7 @@ kfold_metrics <- function(
 ) {
   
   # Perform k-fold cross-validation for a given formula and model type (lm or rf).
-  # Trains on k−1 folds and predicts the held-out fold, repeating for all k folds.
+  # Trains on k-1 folds and predicts the held-out fold, repeating for all k folds.
   # Returns MAE and MAPE along with the model type and formula used.
   
   model <- match.arg(model)
